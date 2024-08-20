@@ -4,15 +4,40 @@
     {
         static void Main(string[] args)
         {
-            Livro livro1 = new Livro("TESTE GIT", "Paulo Celho", 1998, 5);
-            Livro livro2 = new Livro("Banana", "Aleatorio", 2005, 10);
-
             Biblioteca biblioteca01 = new Biblioteca();
+            Menu menu = new Menu();
 
-            biblioteca01.AdicionarLibro(livro1);
-            biblioteca01.AdicionarLibro(livro2);
+            while (true)
+            {
+                int opcao = menu.Cabecalho();
 
-            DateTime dataDevolucao = new DateTime(2024, 8, 15);
+                AcessoMenu(opcao);
+            }
+
+            void AcessoMenu(int opcao)
+            {
+                switch (opcao)
+                {
+                    case 1:
+                        biblioteca01.AdicionarLivro(menu.CadastroLivro());
+                        return;
+                    case 2:
+                        biblioteca01.AdicionarLeitor(menu.CadastroLeitor());
+                        return;
+                    case 3:
+                        biblioteca01.AdicionarEmprestimo();
+                        return;
+                    case 4:
+                        biblioteca01.ExibirLivros();
+                        return;
+                    case 5:
+                        biblioteca01.ExibirLeitores();
+                        return;
+                    case 0:
+                        return;
+                }
+            }
+            //DateTime dataDevolucao = new DateTime(2024, 8, 15);
         }
     }
 }
