@@ -10,7 +10,9 @@
             while (true)
             {
                 int opcao = menu.Cabecalho();
-
+                //if (opcao == 0)
+                //{
+                //}
                 AcessoMenu(opcao);
             }
 
@@ -34,7 +36,7 @@
                         biblioteca01.ExibirLeitores();
                         return;
                     case 0:
-                        return;
+                        break;
                 }
             }
             //DateTime dataDevolucao = new DateTime(2024, 8, 15);
