@@ -13,13 +13,15 @@ namespace BookManeger
         private static int proximoId = 1;
         // Propriedade para armazenar o ID de cada instância
         public int Id { get; private set; }
-
         public string Titulo { get; set; }
         public string Autor { get; set; }
         public int AnoPublicacao { get; set; }
         public int QuantidadeDisponivel { get; set; }
 
-        public Livro() { }
+        public Livro() {
+            Id = proximoId;
+            proximoId++;
+        }
 
         public Livro(string titulo, string autor, int anoPublicacao, int quantidadeDisponivel)
         {

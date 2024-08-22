@@ -16,9 +16,9 @@ namespace BookManeger
             Console.WriteLine("SYSTEM BOOK MANEGER \n");
             Console.WriteLine("1 - Cadastrar Livro");
             Console.WriteLine("2 - Cadastrar Leitor");
-            Console.WriteLine("3 - Realizar emprestimo");
+            Console.WriteLine("3 - Menu Emprestimo");
             Console.WriteLine("4 - Listar livros disponiveis");
-            Console.WriteLine("5 - Listando leitores disponiveis");
+            Console.WriteLine("5 - Listar leitores cadastrados");
             Console.WriteLine("6 - Listar livros emprestados");
             Console.WriteLine("0 - Sair \n");
 
@@ -52,11 +52,15 @@ namespace BookManeger
             return leitor;
         }
 
-        public Emprestimo RealizarEmprestimo()
+        public int MenuEmprestimo()
         {
-            
-            Console.WriteLine("Digite o nome do Leitor");
-            return new Emprestimo();
+            Console.Clear();
+            Console.Write("FAÇA SEU EMPRESTIMO OU DEVOLUÇÃO: \n\n" +
+                "1 - EMPRESTAR LIVRO\n" +
+                "2 - DEVOLVER LIVRO\n" +
+                "3 - EXIBIR EMPRÉSTIMOS: \n\n" +
+                "Digite a opção: ");
+            return int.Parse(Console.ReadLine()!);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace BookManeger
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace BookManeger
 {
     internal class Program
     {
@@ -27,13 +29,15 @@
                         biblioteca01.AdicionarLeitor(menu.CadastroLeitor());
                         return;
                     case 3:
-                        biblioteca01.AdicionarEmprestimo();
+                        biblioteca01.SelecionarEmprestimo(menu.MenuEmprestimo());
                         return;
                     case 4:
-                        biblioteca01.ExibirLivros();
+                        biblioteca01.ExibirLivrosDisponiveis();
                         return;
                     case 5:
                         biblioteca01.ExibirLeitores();
+                        return;
+                    case 6:
                         return;
                     case 0:
                         break;

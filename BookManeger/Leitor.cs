@@ -18,6 +18,11 @@ namespace BookManeger
 
         public int QuantidadeEmprestimo { get; set; }
         
+        public Leitor()
+        {
+            Id = proximoId;
+            proximoId++;
+        }
         public Leitor(string nome, int idade) 
         {
             Id = proximoId;
