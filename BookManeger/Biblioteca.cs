@@ -40,7 +40,7 @@ namespace BookManeger
                 Console.WriteLine(item.AnoPublicacao);
                 Console.WriteLine($"{item.QuantidadeDisponivel}\n");
             }
-            Console.WriteLine("TESTE qualquer tecla p/continuar! ");
+            Console.WriteLine("Pressione qualquer tecla p/continuar! ");
             Console.ReadKey();
         }
         public void ExibirLeitores()
@@ -81,25 +81,30 @@ namespace BookManeger
             Console.Write("Digite a Data de Devolução (formato: yyyy-MM-dd): ");
             DateTime dataDevolucao = DateTime.Parse(Console.ReadLine()!);
 
-            Livro livro = null!;
-            foreach (var item in livrosDisponiveis)
-            {
-                if (item.Id == idLivro)
-                {
-                    livro = item;
-                    break;
-                }
-            }
+            //Livro livro = null!;
+            //foreach (var item in livrosDisponiveis)
+            //{
+            //    if (item.Id == idLivro)
+            //    {
+            //        livro = item;
+            //        break;
+            //    }
+            //}
 
-            Leitor leitor = null!;
-            foreach (var item in listaLeitores)
-            {
-                if (item.Id == idLeitor)
-                {
-                    leitor = item;
-                    break;
-                }
-            }
+            Livro livro = livrosDisponiveis.FirstOrDefault(l => l.Id == idLivro)!;
+
+
+            //Leitor leitor = null!;
+            //foreach (var item in listaLeitores)
+            //{
+            //    if (item.Id == idLeitor)
+            //    {
+            //        leitor = item;
+            //        break;
+            //    }
+            //}
+
+            Leitor leitor = listaLeitores.Find(c => c.Id == idLeitor)!;
 
             if (livro == null)
             {
