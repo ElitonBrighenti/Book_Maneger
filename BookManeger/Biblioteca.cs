@@ -8,11 +8,17 @@ namespace BookManeger
 {
     public class Biblioteca
     {
-        public List<Livro> livrosDisponiveis = new List<Livro>();
-        public List<Livro> livrosEmprestados = new List<Livro>();
-        public List<Leitor> listaLeitores = new List<Leitor>();
-        public List<Emprestimo> listaEmprestimo = new List<Emprestimo>();
-     
+        private List<Livro> livrosDisponiveis = new List<Livro>();
+        private List<Livro> livrosEmprestados = new List<Livro>();
+        private List<Leitor> listaLeitores = new List<Leitor>();
+        private List<Emprestimo> listaEmprestimo = new List<Emprestimo>();
+
+        public IReadOnlyList<Livro> LivrosDisponiveis => livrosDisponiveis.AsReadOnly();
+        public IReadOnlyList<Livro> LivrosEmprestados => livrosEmprestados.AsReadOnly();
+        public IReadOnlyList<Leitor> ListaLeitores => listaLeitores.AsReadOnly();
+        public IReadOnlyList<Emprestimo> ListaEmprestimo => listaEmprestimo.AsReadOnly();
+
+
         public void AdicionarLivro(Livro livro)
         {
             livrosDisponiveis.Add(livro);
