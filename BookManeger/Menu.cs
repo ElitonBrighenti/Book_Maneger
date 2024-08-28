@@ -8,11 +8,53 @@ namespace BookManeger
 {
     public class Menu
     {
+        private readonly IBiblioteca _biblioteca;
 
+        public Menu(IBiblioteca biblioteca)
+        {
+            _biblioteca = biblioteca;
+        }
+
+        public void ProcessarOpcao(int opcao)
+        {
+            try
+            {
+                switch (opcao)
+                {
+                    case 1:
+                        _biblioteca.AdicionarLivro(MenuCadastroLivro());
+                        break;
+                    case 2:
+                        _biblioteca.AdicionarLeitor(MenuCadastroLeitor());
+                        break;
+                    case 3:
+                        _biblioteca.SelecionarEmprestimo(MenuEmprestimo());
+                        break;
+                    case 4:
+                        _biblioteca.ExibirLivrosDisponiveis();
+                        break;
+                    case 5:
+                        _biblioteca.ExibirLeitores();
+                        break;
+                    case 6:
+                        _biblioteca.ExibirEmprestimos();
+                        break;
+                    case 0:
+                        Environment.Exit(0); // Encerra o aplicativo
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválida. Tente novamente.");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro: {ex.Message}");
+            }
+        }
         public int Cabecalho()
         {
             Console.Clear();
-            int opcao;
             Console.WriteLine("SYSTEM BOOK MANEGER \n");
             Console.WriteLine("1 - Cadastrar Livro");
             Console.WriteLine("2 - Cadastrar Leitor");
@@ -22,12 +64,10 @@ namespace BookManeger
             Console.WriteLine("6 - Listar livros emprestados");
             Console.WriteLine("0 - Sair \n");
 
-            Console.Write("Digite a sua opção: ");
-            opcao = int.Parse(Console.ReadLine()!);
-            return opcao;
+            return ObterOpcaoMenu("Digite a sua opção: ");
         }
 
-        public Livro CadastroLivro()
+        public Livro MenuCadastroLivro()
         {
             Console.Clear();
             Console.Write("Titulo Livro: ");
@@ -41,7 +81,7 @@ namespace BookManeger
             Livro livro = new Livro(nomeLivro, autorLivro, anoPublicacao, quantidadeDisponivel);
             return livro;
         }
-        public Leitor CadastroLeitor()
+        public Leitor MenuCadastroLeitor()
         {
             Console.Clear();
             Console.Write("Nome Leitor: ");
@@ -62,6 +102,20 @@ namespace BookManeger
                 "Digite a opção: ");
             return int.Parse(Console.ReadLine()!);
         }
+        private int ObterOpcaoMenu(string mensagem)
+        {
+            int opcao;
+            while (true) 
+            {
+                Console.Write(mensagem); 
+                if (int.TryParse(Console.ReadLine(), out opcao)) 
+                {
+                    return opcao; 
+                }
+                Console.WriteLine("Opção inválida. Tente novamente."); 
+            }
+        }
+
     }
 }
 

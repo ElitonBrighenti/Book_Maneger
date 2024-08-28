@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookManeger
 {
-    public class Biblioteca
+    public class Biblioteca : IBiblioteca
     {
         private List<Livro> livrosDisponiveis = new List<Livro>();
         private List<Livro> livrosEmprestados = new List<Livro>();
@@ -18,14 +18,10 @@ namespace BookManeger
         public IReadOnlyList<Leitor> ListaLeitores => listaLeitores.AsReadOnly();
         public IReadOnlyList<Emprestimo> ListaEmprestimo => listaEmprestimo.AsReadOnly();
 
-
         public void AdicionarLivro(Livro livro)
         {
             livrosDisponiveis.Add(livro);
-            Console.WriteLine("\nPressione qualquer tecla p/sair! ");
-            Console.ReadKey();
-            Console.Clear();
-
+            ExibirMensagemESair("\nPressione qualquer tecla p/sair! ");
         }
         public void ExibirLivrosDisponiveis()
         {
@@ -39,25 +35,20 @@ namespace BookManeger
                 Console.WriteLine(item.AnoPublicacao);
                 Console.WriteLine($"{item.QuantidadeDisponivel}\n");
             }
-            Console.WriteLine("Pressione qualquer tecla p/continuar! ");
-            Console.ReadKey();
+            ExibirMensagemESair("\nPressione qualquer tecla p/sair! ");
         }
         public void AdicionarLeitor(Leitor leitor)
         {
             listaLeitores.Add(leitor);
-            Console.WriteLine("\nPressione qualquer tecla p/sair! ");
-            Console.ReadKey();
-            Console.Clear();
+            ExibirMensagemESair("\nPressione qualquer tecla p/sair! ");
         }
         public void ExibirLeitores()
         {
-            if(listaLeitores.Capacity == 0)
+            if (listaLeitores.Count == 0)
             {
                 Console.Clear();
                 Console.WriteLine("LISTA VAZIA");
-                Console.WriteLine("\nPressione qualquer tecla p/continuar! ");
-                Console.ReadKey();
-                Console.Clear();
+                ExibirMensagemESair("\nPressione qualquer tecla p/continuar! ");
             }
             else
             {
@@ -77,53 +68,89 @@ namespace BookManeger
         }
         public void SelecionarEmprestimo(int opcao)
         {
-            if (opcao == 1)
-                RealizarEmprestimo();
-            if (opcao == 2)
-                DevolverEmprestimo();
-            if( opcao == 3)
-                ExibirEmprestimos();
-            else
-                Console.WriteLine("Opcao invalida");
-                return ;
+            switch (opcao)
+            {
+                case 1:
+                    RealizarEmprestimo();
+                    break;
+                case 2:
+                    DevolverEmprestimo();
+                    break;
+                case 3:
+                    ExibirEmprestimos();
+                    break;
+                default:
+                    Console.WriteLine("Opcao invalida");
+                    break;
+            }
         }
         public void RealizarEmprestimo()
         {
-            Console.Clear();
-            Console.WriteLine("REALIZANDO EMPRÉSTIMO: \n");
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("REALIZANDO EMPRÉSTIMO: \n");
 
+                var livro = ObterLivroPorId();
+                if (livro == null) return;
+
+                var leitor = ObterLeitorPorId();
+                if (leitor == null) return;
+
+                var dataDevolucao = ObterDataDevolucao();
+                if (dataDevolucao == DateTime.MinValue) return;
+
+                CriarEmprestimo(livro, leitor, dataDevolucao);
+                ExibirMensagemESair("Empréstimo realizado com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                ExibirMensagemESair($"Ocorreu um erro: {ex.Message}. Pressione qualquer tecla para continuar.");
+            }
+        }
+
+        private Livro ObterLivroPorId()
+        {
             Console.Write("Digite o ID do Livro: ");
-            int idLivro = int.Parse(Console.ReadLine()!);
-            
-            Livro livro = livrosDisponiveis.FirstOrDefault(l => l.Id == idLivro)!;
-            if (livro == null)
+            if (!int.TryParse(Console.ReadLine(), out int idLivro))
             {
-                Console.WriteLine("\nLivro não encontrado, voltando para o menu");
-                Thread.Sleep(1500);
-                return;
+                ExibirMensagemESair("ID de Livro inválido. Pressione qualquer tecla para voltar ao menu.");
+                return null;
             }
 
+            return livrosDisponiveis.FirstOrDefault(l => l.Id == idLivro);
+        }
+
+        private Leitor ObterLeitorPorId()
+        {
             Console.Write("Digite o ID do Leitor: ");
-            int idLeitor = int.Parse(Console.ReadLine()!);
-
-            Leitor leitor = listaLeitores.Find(c => c.Id == idLeitor)!;
-            if (leitor == null)
+            if (!int.TryParse(Console.ReadLine(), out int idLeitor))
             {
-                Console.WriteLine("Leitor não encontrado.");
-                return;
+                ExibirMensagemESair("ID de Leitor inválido. Pressione qualquer tecla para voltar ao menu.");
+                return null;
             }
 
-            Console.Write("Digite a Data de Devolução (formato: yyyy-MM-dd): ");
-            DateTime dataDevolucao = DateTime.Parse(Console.ReadLine()!);
+            return listaLeitores.Find(c => c.Id == idLeitor);
+        }
 
-            Emprestimo emprestimo = new Emprestimo(livro, leitor, dataDevolucao);
+        private DateTime ObterDataDevolucao()
+        {
+            Console.Write("Digite a Data de Devolução (formato: yyyy-MM-dd): ");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dataDevolucao))
+            {
+                ExibirMensagemESair("Data de devolução inválida. Pressione qualquer tecla para voltar ao menu.");
+                return DateTime.MinValue;
+            }
+
+            return dataDevolucao;
+        }
+
+        private void CriarEmprestimo(Livro livro, Leitor leitor, DateTime dataDevolucao)
+        {
+            var emprestimo = new Emprestimo(livro, leitor, dataDevolucao);
             listaEmprestimo.Add(emprestimo);
             livrosDisponiveis.Remove(livro);
             livrosEmprestados.Add(livro);
-            Console.WriteLine("Empréstimo realizado com sucesso!");
-            Console.WriteLine("Pressione qualquer tecla para sair.");
-            Console.ReadKey();
-
         }
         public void DevolverEmprestimo()
         {
@@ -166,6 +193,12 @@ namespace BookManeger
                 Console.WriteLine($"Leitor que Emprestou: {item.Leitor.NomeCompleto}\n");
             }    
             Console.ReadKey();
+        }
+        private void ExibirMensagemESair(string mensagem)
+        {
+            Console.WriteLine(mensagem);
+            Console.ReadKey();
+            Console.Clear();
         }
     }
 }
